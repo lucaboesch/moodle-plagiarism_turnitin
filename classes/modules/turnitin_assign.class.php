@@ -39,7 +39,7 @@ class turnitin_assign {
     }
 
     public function get_tutor_capability() {
-        return 'mod/'.$this->modname.':grade';
+        return 'plagiarism/turnitin:viewfullreport';
     }
 
     public function user_enrolled_on_course($context, $userid) {

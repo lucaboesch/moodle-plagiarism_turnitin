@@ -37,6 +37,10 @@ if ( !empty( $cmid ) ) {
         case "workshop":
             $userrole = (has_capability('plagiarism/turnitin:viewfullreport', $context)) ? 'Instructor' : 'Learner';
             break;
+        case "assign":
+            $userrole = (has_capability('mod/assign:grade', $context) OR
+                (has_capability('plagiarism/turnitin:viewfullreport', $context)) ? 'Instructor' : 'Learner';
+            break;
         default:
             $userrole = (has_capability('mod/'.$cm->modname.':grade', $context)) ? 'Instructor' : 'Learner';
             break;
