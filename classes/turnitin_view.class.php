@@ -136,17 +136,23 @@ class turnitin_view {
             $mform->addElement('header', 'plugin_header', get_string('turnitinpluginsettings', 'plagiarism_turnitin'));
 
             // Add in custom Javascript and CSS.
-            $PAGE->requires->jquery_plugin('ui');
-            $PAGE->requires->js_call_amd('plagiarism_turnitin/refresh_submissions', 'refreshSubmissions');
-            if ($CFG->version >= 2023100900) {
-                $PAGE->requires->js_call_amd('plagiarism_turnitin/newPeermarkLaunch', 'newPeermarkLaunch');
-                $PAGE->requires->js_call_amd('plagiarism_turnitin/newQuickmarkLaunch', 'newQuickmarkLaunch');
-                $PAGE->requires->js_call_amd('plagiarism_turnitin/newRubric', 'newRubric');
-            } else {
-                $PAGE->requires->js_call_amd('plagiarism_turnitin/peermarkLaunch', 'peermarkLaunch');
-                $PAGE->requires->js_call_amd('plagiarism_turnitin/quickmarkLaunch', 'quickmarkLaunch');
-                $PAGE->requires->js_call_amd('plagiarism_turnitin/rubric', 'rubric');
+            // Only do that if the page output has not already begun (state > 0).
+            // This is needed as from Moodle 4.3 defaultcompletion() will call definition() in modules
+            // which will have knock-on effects for modules enabled for turnitin.
+            if ($PAGE->state == 0) {
+                $PAGE->requires->jquery_plugin('ui');
+                $PAGE->requires->js_call_amd('plagiarism_turnitin/refresh_submissions', 'refreshSubmissions');
+                if ($CFG->version >= 2023100900) {
+                    $PAGE->requires->js_call_amd('plagiarism_turnitin/newPeermarkLaunch', 'newPeermarkLaunch');
+                    $PAGE->requires->js_call_amd('plagiarism_turnitin/newQuickmarkLaunch', 'newQuickmarkLaunch');
+                    $PAGE->requires->js_call_amd('plagiarism_turnitin/newRubric', 'newRubric');
+                } else {
+                    $PAGE->requires->js_call_amd('plagiarism_turnitin/peermarkLaunch', 'peermarkLaunch');
+                    $PAGE->requires->js_call_amd('plagiarism_turnitin/quickmarkLaunch', 'quickmarkLaunch');
+                    $PAGE->requires->js_call_amd('plagiarism_turnitin/rubric', 'rubric');
+                }
             }
+
             // Refresh Grades.
             $refreshgrades = '';
             if ($cmid != 0) {
