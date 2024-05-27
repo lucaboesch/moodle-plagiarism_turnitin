@@ -308,7 +308,10 @@ class plagiarism_plugin_turnitin extends plagiarism_plugin {
             $plagiarismvalues["plagiarism_rubric"] = ( !empty($plagiarismvalues["plagiarism_rubric"]) ) ? $plagiarismvalues["plagiarism_rubric"] : 0;
 
             // We don't require the settings form on Moodle 3.3's bulk completion feature.
-            if ($PAGE->pagetype != 'course-editbulkcompletion' && $PAGE->pagetype != 'course-editdefaultcompletion') {
+            // We also don't require the settings form on Moodle 4.3's bulk completion feature (MDL-78528).
+            if ($PAGE->pagetype != 'course-editbulkcompletion' &&
+                $PAGE->pagetype != 'course-editdefaultcompletion' &&
+                $PAGE->pagetype != 'course-defaultcompletion') {
                 // Create/Edit course in Turnitin and join user to class.
                 $course = $this->get_course_data($cmid, $COURSE->id);
                 $turnitinview->add_elements_to_settings_form($mform, $course, "activity", $modulename, $cmid, $plagiarismvalues["plagiarism_rubric"]);
@@ -1648,15 +1651,19 @@ class plagiarism_plugin_turnitin extends plagiarism_plugin {
     public function create_tii_course($cmid, $modname, $coursedata, $workflowcontext = "site") {
         global $CFG;
 
-        // Create module object.
-        $moduleclass = "turnitin_".$modname;
-        $moduleobject = new $moduleclass;
-
         $turnitinassignment = new turnitin_assignment(0);
         $turnitincourse = $turnitinassignment->create_tii_course($coursedata, $workflowcontext);
 
+        // If $modname is empty just return the basic turnitincourse.
+        // This is needed as from Moodle 4.3 defaultcompletion() will call definition() in modules
+        // which will have knock-on effects for modules enabled for turnitin.
+
         // Join all admins and instructors to the course in Turnitin if it was created.
-        if (!empty($turnitincourse->turnitin_cid)) {
+        if (!empty($turnitincourse->turnitin_cid) && $modname != '') {
+            // Create module object.
+            $moduleclass = "turnitin_".$modname;
+            $moduleobject = new $moduleclass;
+
             $admins = explode(",", $CFG->siteadmins);
 
             // Grab all instructors and extract the ids.
