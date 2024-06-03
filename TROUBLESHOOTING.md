@@ -4,7 +4,9 @@
 
 2) Pop-ups will need to be enabled on the browser being used if access to the Turnitin Document Viewer is required.
 
-3) There have been very isolated reports of the settings not showing for the Plagiarism plugin despite it being enabled, this is due to it not showing in Moodle cache. The solution is for an administrator to purge all caches and it should then appear.
+3) Make sure that in your config.php you have set $CFG->enableplagiarism to true.
+
+4) There have been very isolated reports of the settings not showing for the Plagiarism plugin despite it being enabled, this is due to it not showing in Moodle cache. The solution is for an administrator to purge all caches and it should then appear.
 
 ##Required PHP Extensions
 
