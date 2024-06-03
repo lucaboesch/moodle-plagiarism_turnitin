@@ -3391,8 +3391,7 @@ function plagiarism_turnitin_print_error($input, $module = 'plagiarism_turnitin'
         $message .= ' ('.basename($file).' | '.$line.')';
     }
 
-    print_error($input, 'plagiarism_turnitin', $link, $message);
-    exit();
+    throw new \moodle_exception($input, 'plagiarism_turnitin', $link, $message);
 }
 
 /**
