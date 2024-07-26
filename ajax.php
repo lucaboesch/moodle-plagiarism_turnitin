@@ -24,21 +24,21 @@
 
 use Integrations\PhpSdk\TiiClass;
 
-require_once(__DIR__.'/../../config.php');
-require_once($CFG->dirroot.'/plagiarism/turnitin/lib.php');
-require_once($CFG->dirroot.'/plagiarism/turnitin/classes/turnitin_assignment.class.php');
-require_once($CFG->dirroot.'/plagiarism/turnitin/classes/turnitin_user.class.php');
+require_once(__DIR__ . '/../../config.php');
+require_once($CFG->dirroot . '/plagiarism/turnitin/lib.php');
+require_once($CFG->dirroot . '/plagiarism/turnitin/classes/turnitin_assignment.class.php');
+require_once($CFG->dirroot . '/plagiarism/turnitin/classes/turnitin_user.class.php');
 
 require_login();
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-	  \core\session\manager::write_close();
+    \core\session\manager::write_close();
 }
 
 $action = required_param('action', PARAM_ALPHAEXT);
 $cmid = optional_param('cmid', 0, PARAM_INT);
 $itemid = optional_param('itemid', 0, PARAM_INT);
-if ( !empty( $cmid ) ) {
+if (!empty($cmid)) {
     $cm = get_coursemodule_from_id('', $cmid);
     $context = context_course::instance($cm->course);
 
@@ -50,7 +50,7 @@ if ( !empty( $cmid ) ) {
             $userrole = (has_capability('plagiarism/turnitin:viewfullreport', $context)) ? 'Instructor' : 'Learner';
             break;
         default:
-            $userrole = (has_capability('mod/'.$cm->modname.':grade', $context)) ? 'Instructor' : 'Learner';
+            $userrole = (has_capability('mod/' . $cm->modname.':grade', $context)) ? 'Instructor' : 'Learner';
             break;
     }
 }
@@ -196,8 +196,8 @@ switch ($action) {
         break;
 
     case "peermarkreviews":
-        $replypost = 'mod/'.$cm->modname.':replypost';
-        $submit = 'mod/'.$cm->modname.':submit';
+        $replypost = 'mod/' . $cm->modname.':replypost';
+        $submit = 'mod/' . $cm->modname.':submit';
         $isstudent = ($cm->modname == "forum") ? has_capability($replypost, $context) : has_capability($submit, $context);
 
         if ($userrole == 'Instructor' || $isstudent) {
