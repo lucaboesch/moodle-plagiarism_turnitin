@@ -25,7 +25,6 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class turnitin_assign {
-
     /**
      * @var string
      */
@@ -44,8 +43,8 @@ class turnitin_assign {
      */
     public function __construct() {
         $this->modname = 'assign';
-        $this->gradestable = $this->modname.'_grades';
-        $this->filecomponent = $this->modname.'submission_file';
+        $this->gradestable = $this->modname . '_grades';
+        $this->filecomponent = $this->modname . 'submission_file';
     }
 
     /**
@@ -65,7 +64,7 @@ class turnitin_assign {
      * @return string
      */
     public function get_tutor_capability() {
-        return 'mod/'.$this->modname.':grade';
+        return 'mod/' . $this->modname . ':grade';
     }
 
     /**
@@ -94,7 +93,7 @@ class turnitin_assign {
      * @throws coding_exception
      */
     public function user_enrolled_on_course($context, $userid) {
-        return has_capability('mod/'.$this->modname.':submit', $context, $userid);
+        return has_capability('mod/' . $this->modname . ':submit', $context, $userid);
     }
 
     /**
@@ -120,8 +119,13 @@ class turnitin_assign {
      * @param int $maxattempts Number of max attempts
      * @param string $attemptreopened The attempt reopened status
      */
-    public function is_resubmission_allowed($assignid, $reportgenspeed, $submissiontype, $maxattempts,
-                                            $attemptreopened = null) {
+    public function is_resubmission_allowed(
+        $assignid,
+        $reportgenspeed,
+        $submissiontype,
+        $maxattempts,
+        $attemptreopened = null
+    ) {
         global $DB, $CFG;
 
         // Get the maximum number of file submissions allowed.
@@ -161,11 +165,21 @@ class turnitin_assign {
         global $DB;
 
         // Get latest text content submitted as we do not have submission id.
-        $submissions = $DB->get_records_select('assign_submission', ' userid = ? AND assignment = ? ',
-                                        [$userid, $cm->instance], 'id DESC', 'id', 0, 1);
+        $submissions = $DB->get_records_select(
+            'assign_submission',
+            ' userid = ? AND assignment = ? ',
+            [$userid, $cm->instance],
+            'id DESC',
+            'id',
+            0,
+            1
+        );
         $submission = end($submissions);
-        $moodletextsubmission = $DB->get_record('assignsubmission_onlinetext',
-                                            ['submission' => $submission->id], 'onlinetext, onlineformat');
+        $moodletextsubmission = $DB->get_record(
+            'assignsubmission_onlinetext',
+            ['submission' => $submission->id],
+            'onlinetext, onlineformat'
+        );
 
         $onlinetextdata = new stdClass();
         $onlinetextdata->itemid = $submission->id;
@@ -214,10 +228,11 @@ class turnitin_assign {
     public function get_current_gradequery($userid, $moduleid, $itemid = 0) {
         global $DB;
 
-        $currentgradesquery = $DB->get_records('assign_grades',
-                                                    ['userid' => $userid, 'assignment' => $moduleid],
-                                                    'id DESC'
-                                                );
+        $currentgradesquery = $DB->get_records(
+            'assign_grades',
+            ['userid' => $userid, 'assignment' => $moduleid],
+            'id DESC'
+        );
         return current($currentgradesquery);
     }
 

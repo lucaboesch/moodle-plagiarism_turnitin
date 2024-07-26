@@ -29,7 +29,6 @@ namespace plagiarism_turnitin\task;
  * Send queued submissions to Turnitin.
  */
 class send_submissions extends \core\task\scheduled_task {
-
     /**
      * Get the name of the task.
      *
@@ -48,7 +47,7 @@ class send_submissions extends \core\task\scheduled_task {
     public function execute() {
         global $CFG;
 
-        require_once($CFG->dirroot.'/plagiarism/turnitin/lib.php');
+        require_once($CFG->dirroot . '/plagiarism/turnitin/lib.php');
         $plugin = new \plagiarism_plugin_turnitin();
         if (!$plugin->is_plugin_configured()) {
             return;

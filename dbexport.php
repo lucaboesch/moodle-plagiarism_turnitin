@@ -24,9 +24,9 @@
  */
 
 // Require libs.
-require_once(dirname(dirname(dirname(__FILE__))).'/config.php');
-require_once($CFG->libdir.'/adminlib.php');
-require_once($CFG->dirroot.'/plagiarism/turnitin/classes/turnitin_view.class.php');
+require_once(dirname(dirname(dirname(__FILE__))) . '/config.php');
+require_once($CFG->libdir . '/adminlib.php');
+require_once($CFG->dirroot . '/plagiarism/turnitin/classes/turnitin_view.class.php');
 
 $cssurl = new moodle_url('/plagiarism/turnitin/styles.css');
 $PAGE->requires->css($cssurl);
@@ -43,7 +43,7 @@ $dataformat = optional_param('dataformat', null, PARAM_ALPHANUMEXT);
 
 $turnitinview = new turnitin_view();
 
-$exportfile = "export_".$table."_".date('Y-m-d_His');
+$exportfile = "export_" . $table . "_" . date('Y-m-d_His');
 
 // Use Moodle's dataformatting functions to display a form to download output in different formats.
 $tables = [
@@ -57,7 +57,6 @@ $tables = [
 // If a table has been passed in then export that table data.
 if (!is_null($table)) {
     if (in_array($table, $tables)) {
-
         raise_memory_limit(MEMORY_EXTRA);
 
         $data = $DB->get_records($table, null, 'id ASC');
@@ -65,11 +64,9 @@ if (!is_null($table)) {
         // Use Moodle's dataformatting functions to output the data in the desired format.
         \core\dataformat::download_data($exportfile, $dataformat, array_keys($DB->get_columns($table)), $data);
         exit;
-
     } else {
         $output = html_writer::tag('div', get_string('invalidtablename', 'plagiarism_turnitin', $table));
     }
-
 } else {
     $downloadoptions = "";
     foreach ($tables as $table) {

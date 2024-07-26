@@ -27,14 +27,13 @@ defined('MOODLE_INTERNAL') || die();
 
 global $CFG;
 
-require_once($CFG->dirroot.'/plagiarism/turnitin/lib.php');
-require_once($CFG->libdir."/formslib.php");
+require_once($CFG->dirroot . '/plagiarism/turnitin/lib.php');
+require_once($CFG->libdir . "/formslib.php");
 
 /**
  * Define the form for the Turnitin plugin.
  */
 class turnitin_form extends moodleform {
-
     /**
      * Define the form.
      * @return void
@@ -124,7 +123,6 @@ class turnitin_form extends moodleform {
 
             $mform->addGroup($buttonarray, 'buttonar', '', [' '], false);
         }
-
     }
 
     /**

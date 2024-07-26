@@ -52,9 +52,11 @@ use PHPUnit\Framework\Attributes\CoversFunction;
 #[CoversFunction('\core_plagiarism\privacy\legacy_polyfill::delete_plagiarism_for_user')]
 #[CoversFunction('\core_plagiarism\privacy\legacy_polyfill::delete_plagiarism_for_context')]
 final class provider_test extends \core_privacy\tests\provider_testcase {
-
     /**
      * Test for _get_metadata shim.
+     *
+     * @covers \plagiarism_turnitin\privacy\provider::_get_metadata
+     * @return void
      */
     public function test_get_metadata(): void {
         $this->resetAfterTest();
@@ -109,6 +111,10 @@ final class provider_test extends \core_privacy\tests\provider_testcase {
 
     /**
      * Test that user's contexts are exported.
+     *
+     * @covers \plagiarism_turnitin\privacy\provider::get_contexts_for_userid
+     * @return void
+     * @throws \dml_exception
      */
     public function test_get_contexts_for_userid(): void {
         $this->resetAfterTest();
@@ -127,6 +133,8 @@ final class provider_test extends \core_privacy\tests\provider_testcase {
 
     /**
      * Test that all user data is exported.
+     *
+     * @covers \plagiarism_turnitin\privacy\provider::export_plagiarism_user_data
      * @return void
      * @throws \dml_exception
      */
@@ -147,6 +155,8 @@ final class provider_test extends \core_privacy\tests\provider_testcase {
 
     /**
      * Test that all user data is deleted.
+     *
+     * @covers \plagiarism_turnitin\privacy\provider::delete_plagiarism_for_user
      * @return void
      * @throws \dml_exception
      */
@@ -173,6 +183,8 @@ final class provider_test extends \core_privacy\tests\provider_testcase {
 
     /**
      * Test that all context data is deleted.
+     *
+     * @covers \plagiarism_turnitin\privacy\provider::delete_plagiarism_for_context
      * @return void
      * @throws \dml_exception
      */

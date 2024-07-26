@@ -25,7 +25,6 @@
 namespace plagiarism_turnitin;
 
 use core_competency\course_competency;
-
 use PHPUnit\Framework\Attributes\CoversFunction;
 
 /**
@@ -39,6 +38,9 @@ use PHPUnit\Framework\Attributes\CoversFunction;
 final class turnitin_test extends \advanced_testcase {
     /**
      * Isolates a problem found running core tests in Moodle 31.
+     *
+     * @covers \reset_course_userdata
+     * @return void
      */
     public function test_problem_moodle31_coretests(): void {
         $this->resetAfterTest();

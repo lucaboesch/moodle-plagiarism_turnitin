@@ -22,13 +22,12 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+// phpcs:disable moodle.Commenting.InlineComment
+
 // NOTE: no MOODLE_INTERNAL test here, this file may be required by behat before including /config.php.
 require_once(__DIR__ . '/../../../../lib/behat/behat_base.php');
 require_once(__DIR__ . '/../../vendor/autoload.php');
 
-use Behat\Gherkin\Node\TableNode as TableNode;
-use Behat\Mink\Exception\ExpectationException as ExpectationException;
-use Behat\Mink\Exception\ElementNotFoundException as ElementNotFoundException;
 use Integrations\PhpSdk\TiiMembership;
 use Integrations\PhpSdk\TurnitinAPI;
 // Uncomment line below for screenshots upon behat test failure for debug aid
@@ -38,29 +37,28 @@ use Integrations\PhpSdk\TurnitinAPI;
  * Turnitin behat steps.
  */
 class behat_plagiarism_turnitin extends behat_base {
-
     // Uncomment chunk below for screenshots upon behat test failure for debug aid, may not work with iframes due to CORS
-//
-//    /**
-//     * @AfterStep
-//     */
-//    public function takeScreenshotAfterFailedStep(AfterStepScope $scope) {
-//        if ($scope->getTestResult()->getResultCode() == 99) {
-//            $this->takeScreenshot();
-//        }
-//    }
-//
-//    private function takeScreenshot() {
-//        $screenshot = $this->getSession()->getDriver()->getScreenshot();
-//        $path = __DIR__ . '/screenshots/' . date('d-m-y') . '-' . uniqid() . '.png';
-//
-//        if (!is_dir(dirname($path))) {
-//            mkdir(dirname($path), 0777, true);
-//        }
-//
-//        file_put_contents($path, $screenshot);
-//        print 'Screenshot at: ' . $path . PHP_EOL;
-//    }
+    //
+    // **
+    // * @AfterStep
+    // */
+    // public function takeScreenshotAfterFailedStep(AfterStepScope $scope) {
+    // if ($scope->getTestResult()->getResultCode() == 99) {
+    // $this->takeScreenshot();
+    // }
+    // }
+    //
+    // private function takeScreenshot() {
+    // $screenshot = $this->getSession()->getDriver()->getScreenshot();
+    // $path = __DIR__ . '/screenshots/' . date('d-m-y') . '-' . uniqid() . '.png';
+    //
+    // if (!is_dir(dirname($path))) {
+    // mkdir(dirname($path), 0777, true);
+    // }
+    //
+    // file_put_contents($path, $screenshot);
+    // print 'Screenshot at: ' . $path . PHP_EOL;
+    // }
 
     /**
      * I switch to iframe with locator
@@ -168,8 +166,10 @@ class behat_plagiarism_turnitin extends behat_base {
         }
 
         if (count($elements) != $textcount) {
-            throw new ExpectationException('Found '.count($elements).' instances of the text '. $text.'. Expected '.$textcount,
-                $this->getSession());
+            throw new ExpectationException(
+                'Found ' . count($elements) . ' instances of the text ' . $text . '. Expected ' . $textcount,
+                $this->getSession()
+            );
         }
     }
 
@@ -186,8 +186,12 @@ class behat_plagiarism_turnitin extends behat_base {
      * @throws ElementNotFoundException
      * @throws Exception
      */
-    public function i_obtain_an_originality_report_for_student_on_modtype_assignmentname_on_course_coursename($student,
-        $modtype, $modname, $coursename) {
+    public function i_obtain_an_originality_report_for_student_on_modtype_assignmentname_on_course_coursename(
+        $student,
+        $modtype,
+        $modname,
+        $coursename
+    ) {
         $reportfound = false;
         $count = 1;
         while (!$reportfound) {
@@ -196,7 +200,7 @@ class behat_plagiarism_turnitin extends behat_base {
             $this->execute('behat_navigation::i_am_on_course_homepage', $coursename);
             $this->execute('behat_general::click_link', $modname);
 
-            switch($modtype) {
+            switch ($modtype) {
                 case "assignment":
                     $this->execute('behat_navigation::i_navigate_to_in_current_page_administration', "Submissions");
                     break;
@@ -209,15 +213,19 @@ class behat_plagiarism_turnitin extends behat_base {
             }
 
             try {
-                switch($modtype) {
+                switch ($modtype) {
                     case "assignment":
-                        $this->execute('behat_general::row_column_of_table_should_contain',
-                            [$student, "File submissions", "generaltable", "%"]);
+                        $this->execute(
+                            'behat_general::row_column_of_table_should_contain',
+                            [$student, "File submissions", "generaltable", "%"]
+                        );
                         break;
                     case "forum":
                     case "workshop":
-                        $this->execute('behat_general::assert_element_contains_text',
-                            ["%", "div.origreport_score", "css_element"]);
+                        $this->execute(
+                            'behat_general::assert_element_contains_text',
+                            ["%", "div.origreport_score", "css_element"]
+                        );
                         break;
                 }
                 break;
@@ -279,13 +287,11 @@ class behat_plagiarism_turnitin extends behat_base {
         try {
             $items = $this->find_all($selector, $locator, $exception, $node, $timeout);
             foreach ($items as $element) {
-
                 if ($element->isVisible()) {
                     echo "Element is visible ";
                     $element->click();
                 }
             }
-
         } catch (Exception $e) {
             throw new ElementNotFoundException($this->getSession());
         }

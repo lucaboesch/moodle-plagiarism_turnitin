@@ -42,10 +42,10 @@ use PHPUnit\Framework\Attributes\CoversFunction;
 #[CoversFunction('plagiarism_turnitin\plagiarism_plugin_turnitin::plagiarism_get_report_gen_speed_params')]
 #[CoversFunction('plagiarism_turnitin\plagiarism_plugin_turnitin::plagiarism_set_config')]
 final class lib_test extends \advanced_testcase {
-
     /**
      * Test that the plugin is configured correctly.
      *
+     * @covers \plagiarism_plugin_turnitin::is_plugin_configured
      * @return void
      */
     public function test_is_plugin_configured(): void {
@@ -76,6 +76,7 @@ final class lib_test extends \advanced_testcase {
     /**
      * Test that group submissions are correctly checked.
      *
+     * @covers \plagiarism_plugin_turnitin::check_group_submission
      * @return void
      * @throws \coding_exception
      * @throws \moodle_exception
@@ -192,6 +193,9 @@ final class lib_test extends \advanced_testcase {
 
     /**
      * Test that the data returned from the report gen speed param function is what we expect.
+     *
+     * @covers \plagiarism_plugin_turnitin::plagiarism_get_report_gen_speed_params
+     * @return void
      */
     public function test_plagiarism_get_report_gen_speed_params(): void {
         $this->resetAfterTest();
@@ -208,6 +212,9 @@ final class lib_test extends \advanced_testcase {
 
     /**
      * Test that the set config function saves a config.
+     *
+     * @covers \plagiarism_plugin_turnitin::plagiarism_set_config
+     * @return void
      */
     public function test_plagiarism_set_config(): void {
         $this->resetAfterTest();

@@ -22,7 +22,6 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class turnitin_submission {
-
     /**
      * @var int
      */
@@ -64,8 +63,8 @@ class turnitin_submission {
         global $DB;
 
         // Create module object.
-        $moduleclass = "turnitin_".$this->cm->modname;
-        $moduleobject = new $moduleclass;
+        $moduleclass = "turnitin_" . $this->cm->modname;
+        $moduleobject = new $moduleclass();
 
         // Some data depends on submission type.
         switch ($this->submissiondata->submissiontype) {
@@ -128,20 +127,22 @@ class turnitin_submission {
 
                 // Some forum types don't pass in certain values on main forum page.
                 if ((empty($discussionid)) && ($forum->type == 'blog' || $forum->type == 'single')) {
-                    $discussion = $DB->get_record_sql('SELECT FD.id
-                                                                FROM {forum_posts} FP JOIN {forum_discussions} FD
-                                                                ON FP.discussion = FD.id
-                                                                WHERE FD.forum = ? AND FD.course = ?
-                                                                AND FP.userid = ? AND FP.message = ? ',
-                                                                [$forum->id, $forum->course,
-                                                                    $this->submissiondata->userid, $content, ]
-                                                                );
+                    $discussion = $DB->get_record_sql(
+                        'SELECT FD.id
+                               FROM {forum_posts} FP JOIN {forum_discussions} FD
+                                 ON FP.discussion = FD.id
+                              WHERE FD.forum = ? AND FD.course = ?
+                                AND FP.userid = ? AND FP.message = ? ',
+                        [$forum->id, $forum->course, $this->submissiondata->userid, $content]
+                    );
                     $discussionid = $discussion->id;
                 }
 
-                $submission = $DB->get_record_select('forum_posts',
-                                                " userid = ? AND message = ? AND discussion = ? ",
-                                                [$this->submissiondata->userid, $content, $discussionid]);
+                $submission = $DB->get_record_select(
+                    'forum_posts',
+                    " userid = ? AND message = ? AND discussion = ? ",
+                    [$this->submissiondata->userid, $content, $discussionid]
+                );
 
                 // Collate data and trigger new event for the cron to process.
                 $params = [

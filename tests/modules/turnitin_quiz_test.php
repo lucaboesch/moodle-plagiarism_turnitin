@@ -42,6 +42,9 @@ use PHPUnit\Framework\Attributes\CoversClass;
 final class turnitin_quiz_test extends \advanced_testcase {
     /**
      * Proves that essay response marks are correctly updated.
+     *
+     * @covers \turnitin_quiz::update_mark
+     * @return void
      * @copyright 2014 Tim Hunt
      */
     public function test_update_mark(): void {
@@ -92,10 +95,10 @@ final class turnitin_quiz_test extends \advanced_testcase {
         $this->assertEquals(0.0, $grade);
 
         // Now update the grade of the essay question through the Turnitin quiz class.
-        $tiiquiz = new \turnitin_quiz;
+        $tiiquiz = new \turnitin_quiz();
         $answer = $attemptobj->get_question_attempt(1)->get_response_summary();
         $slot = 1;
-        $identifier = sha1($answer.$slot);
+        $identifier = sha1($answer . $slot);
         $tiiquiz->update_mark($attempt->id, $identifier, $user->id, 75, $quiz->grade);
 
         // Reload the attempt and check the total marks and grade are as we expect it.

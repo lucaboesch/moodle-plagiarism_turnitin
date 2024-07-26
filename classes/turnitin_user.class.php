@@ -28,7 +28,6 @@ use Integrations\PhpSdk\TurnitinApiException;
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class turnitin_user {
-
     /**
      * @var int
      */
@@ -136,7 +135,7 @@ class turnitin_user {
         $firstname = trim($this->firstname);
         $this->firstname = (empty($firstname)) ? "Moodle" : $firstname;
         $lastname = trim($this->lastname);
-        $this->lastname = (empty($lastname)) ? "User ".$this->id : $lastname;
+        $this->lastname = (empty($lastname)) ? "User " . $this->id : $lastname;
 
         $this->email = trim(html_entity_decode($user->email));
         $this->username = $user->username;
@@ -172,7 +171,7 @@ class turnitin_user {
     public function get_pseudo_firstname() {
         $config = plagiarism_plugin_turnitin::plagiarism_turnitin_admin_config();
 
-        return !empty( $config->plagiarism_turnitin_pseudofirstname ) ?
+        return !empty($config->plagiarism_turnitin_pseudofirstname) ?
             $config->plagiarism_turnitin_pseudofirstname : PLAGIARISM_TURNITIN_DEFAULT_PSEUDO_FIRSTNAME;
     }
 
@@ -187,8 +186,10 @@ class turnitin_user {
         $userinfo = $DB->get_record('user_info_data', ['userid' => $this->id,
             'fieldid' => $config->plagiarism_turnitin_pseudolastname]);
 
-        if ((!isset($userinfo->data) || empty($userinfo->data)) && $config->plagiarism_turnitin_pseudolastname != 0 &&
-            $config->plagiarism_turnitin_lastnamegen == 1) {
+        if (
+            (!isset($userinfo->data) || empty($userinfo->data)) && $config->plagiarism_turnitin_pseudolastname != 0 &&
+            $config->plagiarism_turnitin_lastnamegen == 1
+        ) {
             $uniqueid = strtoupper(strrev(uniqid()));
             $userinfoob = new stdClass();
             $userinfoob->userid = $this->id;
@@ -314,10 +315,9 @@ class turnitin_user {
             $newuser = $response->getUser();
             $tiiuserid = $newuser->getUserId();
 
-            plagiarism_turnitin_activitylog("Turnitin User created: ".$this->id." (".$tiiuserid.")", "REQUEST");
+            plagiarism_turnitin_activitylog("Turnitin User created: " . $this->id . " (" . $tiiuserid . ")", "REQUEST");
 
             return $tiiuserid;
-
         } catch (Exception $e) {
             $toscreen = ($this->workflowcontext == "cron") ? false : true;
             $turnitincomms->handle_exceptions($e, 'usercreationerror', $toscreen);
@@ -376,7 +376,7 @@ class turnitin_user {
             $DB->update_record('plagiarism_turnitin_users', $tiiuser);
         }
 
-        plagiarism_turnitin_activitylog("User unlinked: ".$this->id." (".$tiidbid.") ", "REQUEST");
+        plagiarism_turnitin_activitylog("User unlinked: " . $this->id . " (" . $tiidbid . ") ", "REQUEST");
     }
 
 
@@ -439,8 +439,8 @@ class turnitin_user {
         try {
             $turnitincall->createMembership($membership);
 
-            plagiarism_turnitin_activitylog("User ".$this->id." (".$this->tiiuserid.") joined to class (".
-                $tiicourseid.")", "REQUEST");
+            plagiarism_turnitin_activitylog("User " . $this->id . " (" . $this->tiiuserid . ") joined to class (" .
+                $tiicourseid . ")", "REQUEST");
 
             return true;
         } catch (Exception $e) {
@@ -521,7 +521,6 @@ class turnitin_user {
             ];
 
             return $tiiuser;
-
         } catch (Exception $e) {
             try {
                 // We need to join the user to the account, we can only do that by adding the user to a class
@@ -545,8 +544,7 @@ class turnitin_user {
 
                 $this->usermessages = $readuser->getUserMessages();
                 $this->save_instructor_rubrics($readuser->getInstructorRubrics());
-
-            } catch ( Exception $e ) {
+            } catch (Exception $e) {
                 $turnitincomms->handle_exceptions($e, 'tiiusergeterror');
             }
         }
@@ -626,14 +624,13 @@ class turnitin_user {
 
         // Add sort to query.
         if (!empty($params["order"][0]["column"])) {
-          $sortcolumn = clean_param($params["order"][0]["column"], PARAM_INT);
-          $sortdirection = strtolower(clean_param($params["order"][0]["dir"], PARAM_TEXT));
-          if ($sortdirection === 'asc' || $sortdirection === 'desc') {
-              $queryorder = " ORDER BY ".$sortcolumn." ".$sortdirection;
-          }
-        }
-        else {
-          $queryorder = "";
+            $sortcolumn = clean_param($params["order"][0]["column"], PARAM_INT);
+            $sortdirection = strtolower(clean_param($params["order"][0]["dir"], PARAM_TEXT));
+            if ($sortdirection === 'asc' || $sortdirection === 'desc') {
+                $queryorder = " ORDER BY " . $sortcolumn . " " . $sortdirection;
+            }
+        } else {
+            $queryorder = "";
         }
 
         // Add search to query.
@@ -649,22 +646,22 @@ class turnitin_user {
                 }
 
                 if ($include) {
-                    $querywhere .= $DB->sql_like($displaycolumns[$i], ':search_term_'.$i, false)." OR ";
-                    $queryparams['search_term_'.$i] = '%'.$ssearch.'%';
+                    $querywhere .= $DB->sql_like($displaycolumns[$i], ':search_term_' . $i, false) . " OR ";
+                    $queryparams['search_term_' . $i] = '%' . $ssearch . '%';
                 }
             }
         }
-        if ( $querywhere == ' WHERE ( ' ) {
+        if ($querywhere == ' WHERE ( ') {
             $querywhere = "";
         } else {
-            $querywhere = substr_replace( $querywhere, "", -3 );
+            $querywhere = substr_replace($querywhere, "", -3);
             $querywhere .= " )";
         }
 
-        $query = "SELECT tu.id AS id, tu.userid AS userid, tu.turnitin_uid AS turnitin_uid, tu.turnitin_utp AS turnitin_utp, ".
-            "mu.firstname AS firstname, mu.lastname AS lastname, mu.email AS email ".
-            "FROM {plagiarism_turnitin_users} tu ".
-            "LEFT JOIN {user} mu ON tu.userid = mu.id ".$querywhere." ".$queryorder;
+        $query = "SELECT tu.id AS id, tu.userid AS userid, tu.turnitin_uid AS turnitin_uid, tu.turnitin_utp AS turnitin_utp, " .
+            "mu.firstname AS firstname, mu.lastname AS lastname, mu.email AS email " .
+            "FROM {plagiarism_turnitin_users} tu " .
+            "LEFT JOIN {user} mu ON tu.userid = mu.id " . $querywhere . " " . $queryorder;
 
         $users = $DB->get_records_sql($query, $queryparams, $idisplaystart, $idisplaylength);
         $totalusers = count($DB->get_records_sql($query, $queryparams));

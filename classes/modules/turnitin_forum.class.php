@@ -25,7 +25,6 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class turnitin_forum {
-
     /**
      * @var string
      */
@@ -45,7 +44,7 @@ class turnitin_forum {
     public function __construct() {
         $this->modname = 'forum';
         $this->gradestable = 'grade_grades';
-        $this->filecomponent = 'mod_'.$this->modname;
+        $this->filecomponent = 'mod_' . $this->modname;
     }
 
     /**
@@ -77,7 +76,7 @@ class turnitin_forum {
      * @throws coding_exception
      */
     public function user_enrolled_on_course($context, $userid) {
-        return has_capability('mod/'.$this->modname.':replypost', $context, $userid);
+        return has_capability('mod/' . $this->modname . ':replypost', $context, $userid);
     }
 
     /**
@@ -155,9 +154,9 @@ class turnitin_forum {
      */
     public function get_discussionid($forumdata) {
         global $CFG;
-        require_once($CFG->dirroot.'/mod/forum/lib.php');
+        require_once($CFG->dirroot . '/mod/forum/lib.php');
 
-        list($querystrid, $discussionid, $reply, $edit, $delete) = explode('_', $forumdata);
+        [$querystrid, $discussionid, $reply, $edit, $delete] = explode('_', $forumdata);
 
         if (empty($discussionid)) {
             $parent = '';

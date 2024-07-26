@@ -18,10 +18,10 @@ use Integrations\PhpSdk\TiiClass;
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->dirroot.'/plagiarism/turnitin/lib.php');
-require_once($CFG->dirroot.'/plagiarism/turnitin/classes/turnitin_comms.class.php');
-require_once($CFG->dirroot.'/plagiarism/turnitin/classes/turnitin_user.class.php');
-require_once($CFG->dirroot.'/plagiarism/turnitin/classes/turnitin_submission.class.php');
+require_once($CFG->dirroot . '/plagiarism/turnitin/lib.php');
+require_once($CFG->dirroot . '/plagiarism/turnitin/classes/turnitin_comms.class.php');
+require_once($CFG->dirroot . '/plagiarism/turnitin/classes/turnitin_user.class.php');
+require_once($CFG->dirroot . '/plagiarism/turnitin/classes/turnitin_submission.class.php');
 
 /**
  * Defines the class for Turnitin assignments
@@ -31,7 +31,6 @@ require_once($CFG->dirroot.'/plagiarism/turnitin/classes/turnitin_submission.cla
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class turnitin_assignment {
-
     /**
      * @var int|mixed
      */
@@ -98,8 +97,8 @@ class turnitin_assignment {
         $turnitincall = $this->turnitincomms->initialise_api();
 
         $class = new TiiClass();
-        $tiititle = $this->truncate_title( $course->fullname, PLAGIARISM_TURNITIN_COURSE_TITLE_LIMIT );
-        $class->setTitle( $tiititle );
+        $tiititle = $this->truncate_title($course->fullname, PLAGIARISM_TURNITIN_COURSE_TITLE_LIMIT);
+        $class->setTitle($tiititle);
 
         try {
             $response = $this->api_create_class($turnitincall, $class);
@@ -126,8 +125,11 @@ class turnitin_assignment {
                 $turnitincourse->id = $insertid;
             }
 
-            plagiarism_turnitin_activitylog("Class created - ".$turnitincourse->courseid." | ".$turnitincourse->turnitin_cid.
-                " | ".$course->fullname . " (Moodle PP)" , "REQUEST");
+            plagiarism_turnitin_activitylog(
+                "Class created - " . $turnitincourse->courseid . " | " . $turnitincourse->turnitin_cid .
+                " | " . $course->fullname . " (Moodle PP)",
+                "REQUEST"
+            );
 
             return $turnitincourse;
         } catch (Exception $e) {
@@ -151,8 +153,8 @@ class turnitin_assignment {
         $class = new TiiClass();
         $this->api_set_class_id($class, $course->turnitin_cid);
 
-        $title = $this->truncate_title( $course->fullname, PLAGIARISM_TURNITIN_COURSE_TITLE_LIMIT );
-        $class->setTitle( $title );
+        $title = $this->truncate_title($course->fullname, PLAGIARISM_TURNITIN_COURSE_TITLE_LIMIT);
+        $class->setTitle($title);
 
         // If a course end date is specified in Moodle then we set this in Turnitin with an additional month to
         // account for the Turnitin viewer becoming read-only once the class end date passes.
@@ -176,7 +178,7 @@ class turnitin_assignment {
                 plagiarism_turnitin_print_error('classupdateerror', 'plagiarism_turnitin', null, null, __FILE__, __LINE__);
                 exit();
             } else {
-                plagiarism_turnitin_activitylog("Class edited - ".$update->turnitin_ctl." (".$update->id.")", "REQUEST");
+                plagiarism_turnitin_activitylog("Class edited - " . $update->turnitin_ctl . " (" . $update->id . ")", "REQUEST");
             }
         } catch (Exception $e) {
             $this->turnitincomms->handle_exceptions($e, 'classupdateerror', false);
@@ -194,8 +196,8 @@ class turnitin_assignment {
         $limit = $limit - strlen($suffix);
         $truncatedtitle = "";
 
-        if ( mb_strlen( $title, 'UTF-8' ) > $limit ) {
-            $truncatedtitle .= mb_substr( $title, 0, $limit - 3, 'UTF-8' ) . "...";
+        if (mb_strlen($title, 'UTF-8') > $limit) {
+            $truncatedtitle .= mb_substr($title, 0, $limit - 3, 'UTF-8') . "...";
         } else {
             $truncatedtitle .= $title;
         }
@@ -218,7 +220,7 @@ class turnitin_assignment {
             $newassignment = $this->api_get_assignment($response);
             $assignmentid = $this->api_get_assignment_id($newassignment);
 
-            plagiarism_turnitin_activitylog("Assignment created as Turnitin Assignment (".$assignmentid.")", "REQUEST");
+            plagiarism_turnitin_activitylog("Assignment created as Turnitin Assignment (" . $assignmentid . ")", "REQUEST");
 
             return $assignmentid;
         } catch (Exception $e) {
@@ -248,16 +250,14 @@ class turnitin_assignment {
 
             $_SESSION["assignment_updated"][$assignmentid] = time();
 
-            plagiarism_turnitin_activitylog("Turnitin Assignment updated - id: ".$assignmentid, "REQUEST");
+            plagiarism_turnitin_activitylog("Turnitin Assignment updated - id: " . $assignmentid, "REQUEST");
 
             return ['success' => true, 'tiiassignmentid' => $assignmentid];
-
         } catch (Exception $e) {
             $toscreen = true;
 
             // Separate error handling for the Plagiarism plugin.
             if ($workflowcontext == "cron") {
-
                 $error = new stdClass();
                 $error->title = $this->api_get_title($assignment);
                 $error->assignmentid = $assignmentid;

@@ -37,7 +37,6 @@ require_once($CFG->dirroot . '/mod/assign/externallib.php');
  * @package turnitin
  */
 final class turnitin_assignment_class_test extends \advanced_testcase {
-
     /**
      * Set Overwrite mtrace to avoid output during the tests.
      */

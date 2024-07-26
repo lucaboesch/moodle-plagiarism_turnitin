@@ -18,7 +18,7 @@ use Integrations\PhpSdk\TiiClass;
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->dirroot.'/plagiarism/turnitin/classes/turnitin_comms.class.php');
+require_once($CFG->dirroot . '/plagiarism/turnitin/classes/turnitin_comms.class.php');
 
 /**
  * Class turnitin_class
@@ -28,7 +28,6 @@ require_once($CFG->dirroot.'/plagiarism/turnitin/classes/turnitin_comms.class.ph
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class turnitin_class {
-
     /**
      * @var int
      */
@@ -91,7 +90,6 @@ class turnitin_class {
             }
 
             $this->sharedrubrics = $rubricarray;
-
         } catch (Exception $e) {
             $turnitincomms->handle_exceptions($e, 'coursegeterror', false);
         }

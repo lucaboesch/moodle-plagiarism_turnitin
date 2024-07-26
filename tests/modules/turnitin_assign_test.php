@@ -39,7 +39,6 @@ use PHPUnit\Framework\Attributes\CoversFunction;
  */
 #[CoversFunction('\turnitin_assign::is_resubmission_allowed')]
 final class turnitin_assign_test extends \advanced_testcase {
-
     /** @var stdClass created in setUp. */
     protected $course;
 
@@ -66,6 +65,9 @@ final class turnitin_assign_test extends \advanced_testcase {
 
     /**
      * Test to check whether resubmissions are allowed.
+     *
+     * @covers \turnitin_assign::is_resubmission_allowed
+     * @return void
      */
     public function test_check_is_resubmission_allowed(): void {
         $this->resetAfterTest(true);
@@ -73,34 +75,61 @@ final class turnitin_assign_test extends \advanced_testcase {
         // Create module object.
         $moduleobject = new \turnitin_assign();
 
-        $resubmissionallowed = $moduleobject->is_resubmission_allowed($this->assign->id, 1, 'file',
-            1);
+        $resubmissionallowed = $moduleobject->is_resubmission_allowed(
+            $this->assign->id,
+            1,
+            'file',
+            1
+        );
         $this->assertTrue($resubmissionallowed);
 
-        $resubmissionallowed = $moduleobject->is_resubmission_allowed($this->assign->id, 1, 'text_content',
-            1);
+        $resubmissionallowed = $moduleobject->is_resubmission_allowed(
+            $this->assign->id,
+            1,
+            'text_content',
+            1
+        );
         $this->assertTrue($resubmissionallowed);
 
-        $resubmissionallowed = $moduleobject->is_resubmission_allowed($this->assign->id, 1, 'text_content',
-            5);
+        $resubmissionallowed = $moduleobject->is_resubmission_allowed(
+            $this->assign->id,
+            1,
+            'text_content',
+            5
+        );
         $this->assertFalse($resubmissionallowed);
 
-        $resubmissionallowed = $moduleobject->is_resubmission_allowed($this->assign->id, 0, 'file',
-            1);
+        $resubmissionallowed = $moduleobject->is_resubmission_allowed(
+            $this->assign->id,
+            0,
+            'file',
+            1
+        );
         $this->assertFalse($resubmissionallowed);
 
-        $resubmissionallowed = $moduleobject->is_resubmission_allowed($this->assign->id, 0, 'text_content',
-            1);
+        $resubmissionallowed = $moduleobject->is_resubmission_allowed(
+            $this->assign->id,
+            0,
+            'text_content',
+            1
+        );
         $this->assertFalse($resubmissionallowed);
 
-        $resubmissionallowed = $moduleobject->is_resubmission_allowed($this->assign->id, 1, 'file',
-            5);
+        $resubmissionallowed = $moduleobject->is_resubmission_allowed(
+            $this->assign->id,
+            1,
+            'file',
+            5
+        );
         $this->assertFalse($resubmissionallowed);
     }
 
 
     /**
      * Test that resubmissions are not allowed for files if the maximum files in a submission is more than 1.
+     *
+     * @covers \turnitin_assign::is_resubmission_allowed
+     * @return void
      */
     public function test_check_is_resubmission_allowed_maxfiles_above_threshold(): void {
         $this->resetAfterTest(true);
@@ -117,11 +146,20 @@ final class turnitin_assign_test extends \advanced_testcase {
 
         // Create module object.
         $moduleobject = new \turnitin_assign();
-        $resubmissionallowed = $moduleobject->is_resubmission_allowed($assign->id, 1, 'file', 1);
+        $resubmissionallowed = $moduleobject->is_resubmission_allowed(
+            $assign->id,
+            1,
+            'file',
+            1
+        );
         $this->assertFalse($resubmissionallowed);
 
-        $resubmissionallowed = $moduleobject->is_resubmission_allowed($assign->id, 1, 'text_content',
-            1);
+        $resubmissionallowed = $moduleobject->is_resubmission_allowed(
+            $assign->id,
+            1,
+            'text_content',
+            1
+        );
         $this->assertTrue($resubmissionallowed);
     }
 }
