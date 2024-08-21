@@ -2004,12 +2004,11 @@ class plagiarism_plugin_turnitin extends plagiarism_plugin {
      */
     public function cron_update_scores() {
         global $DB;
-
-<<<<<<< HEAD
-        $submissionids = array();
-        $reportsexpected = array();
-        $assignmentids = array();
         
+        $submissionids = [];
+        $reportsexpected = [];
+        $assignmentids = [];
+
         // Grab all plagiarism files where all the following conditions are met:
         // 1. The file has been successfully sent to TII
         // 2. The submission is ready to recieve a similarity score (either it doesn't already have a similarity score or it's set to regenerate)
@@ -2025,20 +2024,8 @@ class plagiarism_plugin_turnitin extends plagiarism_plugin {
           AND ( similarityscore IS NULL OR duedate_report_refresh = 1 )
           AND ( orcapable = ? OR orcapable IS NULL )
           ORDER BY externalid DESC',
-          ['success', 1]
-=======
-        $submissionids = [];
-        $reportsexpected = [];
-        $assignmentids = [];
-
-        $submissions = $DB->get_records_select(
-            'plagiarism_turnitin_files',
-            'statuscode = ?
-            AND ( similarityscore IS NULL OR duedate_report_refresh = 1 )
-            AND ( orcapable = ? OR orcapable IS NULL ) ',
-            ['success', 1],
-            'externalid DESC'
->>>>>>> 57c54bb (Fix 'Short array syntax must be used to define arrays' warnings.)
+          ['success', 1],
+          'externalid DESC'
         );
 
         // Cache module settings
@@ -2068,19 +2055,10 @@ class plagiarism_plugin_turnitin extends plagiarism_plugin {
 
             if (!isset($reportsexpected[$tiisubmission->cm])) {
 
-<<<<<<< HEAD
                 $reportsexpected[$tiisubmission->cm] = 1;
 
                 if (!isset($modulesettings[$tiisubmission->cm]['plagiarism_compare_institution'])) {
                     $modulesettings[$tiisubmission->cm]['plagiarism_compare_institution'] = 0;
-=======
-                // Updates the db field 'duedate_report_refresh' if the due date has passed within the last twenty four hours.
-                $moduledata = $DB->get_record($cm->modname, ['id' => $cm->instance]);
-                $now = strtotime('now');
-                $dtdue = (!empty($moduledata->duedate)) ? $moduledata->duedate : 0;
-                if ($now >= $dtdue && $now < strtotime('+1 day', $dtdue)) {
-                    $this->set_duedate_report_refresh($tiisubmission->id, 1);
->>>>>>> 57c54bb (Fix 'Short array syntax must be used to define arrays' warnings.)
                 }
 
                 // Don't add the submission to the request if module settings mean we will not get a report back.
@@ -2097,26 +2075,12 @@ class plagiarism_plugin_turnitin extends plagiarism_plugin {
             if ($reportsexpected[$tiisubmission->cm] == 1) {
                 $submissionids[] = $tiisubmission->externalid;
 
-<<<<<<< HEAD
                 // If submission is added to the request, add the corresponding assign id in the assignids array.
                 $moduleturnitinconfig = $DB->get_record('plagiarism_turnitin_config',
-                    [ 'cm' => $tiisubmission->cm, 'name' => 'turnitin_assignid' ]);
+                    ['cm' => $tiisubmission->cm, 'name' => 'turnitin_assignid' ]);
            
                 if (!isset(array_flip($assignmentids)[$moduleturnitinconfig->value])) {
                     $assignmentids[] = $moduleturnitinconfig->value;
-=======
-                    // If submission is added to the request, add the corresponding assign id in the assignids array.
-                    $moduleturnitinconfig = $DB->get_record('plagiarism_turnitin_config',
-                        [
-                            'cm' => $cm->id,
-                            'name' => 'turnitin_assignid'
-                        ]
-                    );
-
-                    if (!isset(array_flip($assignmentids)[$moduleturnitinconfig->value])) {
-                        $assignmentids[] = $moduleturnitinconfig->value;
-                    }
->>>>>>> 57c54bb (Fix 'Short array syntax must be used to define arrays' warnings.)
                 }
             }
         }
